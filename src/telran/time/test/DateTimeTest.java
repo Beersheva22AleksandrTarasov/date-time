@@ -2,11 +2,14 @@ package telran.time.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,31 +47,18 @@ class DateTimeTest {
 		// displaying current local date and time for all Canada time zones
 		// displaying should contains time zone name
 
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE, d MMM yyyy, HH:mm:ss, z");
-
-		String Vancouver = "America/Vancouver";
-		ZonedDateTime dateTimeVancouver = ZonedDateTime.now(ZoneId.of(Vancouver));
-		System.out.println(dateTimeVancouver.format(dtf));
-
-		String Toronto = "America/Toronto";
-		ZonedDateTime dateTimeToronto = ZonedDateTime.now(ZoneId.of(Toronto));
-		System.out.println(dateTimeToronto.format(dtf));
-
-		String Edmonton = "America/Edmonton";
-		ZonedDateTime dateTimeEdmonton = ZonedDateTime.now(ZoneId.of(Edmonton));
-		System.out.println(dateTimeEdmonton.format(dtf));
-
+		Instant dateTime = Instant.now();
+		ZoneId.getAvailableZoneIds().stream().filter(a -> a.toLowerCase().contains("canada"))
+				.forEach(tz -> System.out.printf("%s %s\n", LocalDateTime.ofInstant(dateTime, ZoneId.of(tz))
+						.format(DateTimeFormatter.ofPattern("YYYY-MM-d, HH:mm:ss")), tz));
 	}
 
 	@Test
 	void nextFriday13Test() {
-		LocalDate dateResult = LocalDate.of(2023, 2, 23);
-		LocalDate dateFriday = LocalDate.of(2023, 2, 17);
-		while (!dateResult.getDayOfWeek().equals(dateFriday.getDayOfWeek())) {
-			dateResult = dateResult.with(new NextFriday13());
-		}
-		System.out.printf("Next friday the 13th will be %s", dateResult);
-		System.out.println();
+		TemporalAdjuster nextFriday13 = new NextFriday13();
+		assertEquals(LocalDate.of(2023, 1, 13), LocalDate.of(2023, 1, 10)
+				.with(nextFriday13));
+		assertEquals(LocalDate.of(2023, 10, 13), LocalDate.of(2023, 1, 13).with(nextFriday13));
 
 	}
 
