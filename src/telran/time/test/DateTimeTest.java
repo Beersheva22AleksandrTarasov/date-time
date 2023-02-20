@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import telran.time.BarMizvaAdjuster;
 import telran.time.NextFriday13;
+import telran.time.application.PrintCalendar;
 
 class DateTimeTest {
 
@@ -56,10 +57,8 @@ class DateTimeTest {
 	@Test
 	void nextFriday13Test() {
 		TemporalAdjuster nextFriday13 = new NextFriday13();
-		assertEquals(LocalDate.of(2023, 1, 13), LocalDate.of(2023, 1, 10)
-				.with(nextFriday13));
+		assertEquals(LocalDate.of(2023, 1, 13), LocalDate.of(2023, 1, 10).with(nextFriday13));
 		assertEquals(LocalDate.of(2023, 10, 13), LocalDate.of(2023, 1, 13).with(nextFriday13));
 
 	}
-
 }
